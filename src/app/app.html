@@ -1,1 +1,32 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-menu [content]="content" persistent="true">
+
+    <ion-header color="primary">
+        <ion-toolbar>
+            <ion-title>Place Booking</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ion-content margin-top>
+      <ion-list>
+
+        <button ion-item icon-start (click)="openPage('places')" >
+            <ion-icon name="map" color="grey" margin-right style="padding-top: 2px;"></ion-icon>
+            Discover Places
+        </button>
+
+
+        <button ion-item icon-start (click)="openPage('bookings')">
+            <ion-icon name="checkbox" color="grey" margin-right style="padding-top: 2px;"></ion-icon>
+            Bookings
+        </button>
+
+        <button ion-item icon-start (click)="openPage('auth')">
+            <ion-icon name="log-out" color="grey" margin-right style="padding-top: 2px;"></ion-icon>
+            Authentication
+        </button>
+
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+<ion-nav #content [root]="rootPage"></ion-nav>
