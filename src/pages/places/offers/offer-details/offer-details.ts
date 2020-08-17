@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Place } from '../../place.model';
+
 
 /**
- * Generated class for the DiscoverPage page.
+ * Generated class for the OfferDetailsPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -10,16 +12,19 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-discover',
-  templateUrl: 'discover.html',
+  selector: 'page-offer-details',
+  templateUrl: 'offer-details.html',
 })
-export class DiscoverPage {
+export class OfferDetailsPage {
+
+  private loadedOffer: Place;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.loadedOffer = navParams.get('offer');
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad DiscoverPage');
+    console.log('ionViewDidLoad OfferDetailsPage');
   }
 
 }

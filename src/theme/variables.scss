@@ -36,6 +36,7 @@ $app-direction: ltr;
 $colors: (
   primary:    #3D9BDD,
   secondary:  #32db64,
+  warning:    #ff9a00,
   danger:     #f53d3d,
   light:      #f4f4f4,
   grey:       #555555,
@@ -43,7 +44,8 @@ $colors: (
 );
 
 $toolbar-background: #3D9BDD;
-
+$item-md-detail-push-show: true;
+$item-wp-detail-push-show: true;
 
 // App iOS Variables
 // --------------------------------------------------
