@@ -2,7 +2,9 @@ import { Injectable } from "@angular/core";
 import { Place } from "./place.model";
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from "@angular/common/http";
-import { tap, map } from "rxjs/operators";
+import { tap, map, take, switchMap } from "rxjs/operators";
+import { PlaceLocation } from "./location.model";
+import { AuthService } from "../auth/auth.service";
 
 
 interface PlaceInterface {
@@ -12,6 +14,7 @@ interface PlaceInterface {
     imageUrl: string;
     price: number;
     title: string;
+    location: PlaceLocation
     userId: string;
   }
   
@@ -19,7 +22,7 @@ interface PlaceInterface {
 @Injectable()
 export class PlacesService {
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private authService: AuthService) {}
 
     private _places = new BehaviorSubject<Place[]>([new Place(
         "",
@@ -27,6 +30,7 @@ export class PlacesService {
         "",
         "",
         0,
+        null,
         null,
         null,
         ''
@@ -39,6 +43,7 @@ export class PlacesService {
         199.99,
         new Date('2020-01-01'),
         new Date('2020-12-31'),
+        null,
         'a'
       ),
       new Place(
@@ -49,6 +54,7 @@ export class PlacesService {
         199.99,
         new Date('2020-01-01'),
         new Date('2020-12-31'),
+        null,
         'abc'
       ),
     ]);
@@ -74,6 +80,7 @@ export class PlacesService {
                 resData[key].price,
                 new Date(resData[key].availableFrom),
                 new Date(resData[key].availableTo),
+                resData[key].location,
                 resData[key].userId,
               ));
             }
@@ -104,13 +111,14 @@ export class PlacesService {
               resData[key].price,
               new Date(resData[key].availableFrom),
               new Date(resData[key].availableTo),
+              resData[key].location,
               resData[key].userId,
             ));
           }
         }
 
         return places.filter(p => {
-          return p.userId === 'bc'
+          return p.userId === this.authService.userId;
         });
       }),
       tap(places => {
@@ -118,7 +126,40 @@ export class PlacesService {
         this._places.next(places)
       })
     );
-}
+  }
+
+  addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date, location: PlaceLocation) {
+
+    let generated_id: string;
+
+    const newPlace = new Place(
+      new Date().toISOString(),
+      title,description,
+      "https://i.pinimg.com/originals/65/8f/77/658f77b9b527f89922ba996560a3e2b0.jpg",
+      price,
+      dateFrom,
+      dateTo,
+      location,
+      this.authService.userId
+    );
+
+    return this.http.post<{name: string}>('https://placebooking-5d7b2.firebaseio.com/offered-places.json', {...newPlace, id: null})
+    .pipe(
+      
+      switchMap(res => {
+        generated_id = res.name;
+        newPlace.id = generated_id;
+        return this.places;
+      }),
+      take(1),
+      tap(places => {
+        
+        this._places.next(places.concat(newPlace));
+        
+      })
+    )
+
+  }
 
 }
 

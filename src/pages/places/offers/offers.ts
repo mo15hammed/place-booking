@@ -59,7 +59,7 @@ export class OffersPage implements OnInit{
 
   onAdd() {
     console.log('Add Offer');
-    
+    this.navCtrl.push('AddOfferPage')
   }
 
 }

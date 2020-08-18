@@ -47,6 +47,27 @@ $toolbar-background: #3D9BDD;
 $item-md-detail-push-show: true;
 $item-wp-detail-push-show: true;
 
+
+
+.md .error-msg {
+  font-size: 12px !important;
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+  color:  #f53d3d !important;
+  // position: relative;
+  // left: 18px;
+  // height: 
+}
+
+.ios .error-msg {
+  font-size: 12px !important;
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+  color:  #f53d3d !important;
+  position: relative;
+  left: 18px;
+}
+
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here

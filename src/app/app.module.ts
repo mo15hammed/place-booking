@@ -7,6 +7,7 @@ import { HttpClientModule } from "@angular/common/http";
 
 import { MyApp } from './app.component';
 import { PlacesService } from '../pages/places/places.service';
+import { AuthService } from '../pages/auth/auth.service';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { PlacesService } from '../pages/places/places.service';
     StatusBar,
     SplashScreen,
     PlacesService,
+    AuthService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
