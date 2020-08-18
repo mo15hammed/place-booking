@@ -26,7 +26,6 @@ export class OffersPage implements OnInit{
   ngOnInit() {
     this.placesService.places.subscribe(offers => {
       this.loadedOffers = offers;
-      console.log(offers);
       
     });
   }
@@ -52,7 +51,7 @@ export class OffersPage implements OnInit{
 
   onEdit(offer: Place, ionItemSliding: ItemSliding) {
     console.log('Edit Offer');
-
+    this.navCtrl.push('EditOfferPage', {offer: offer});
     ionItemSliding.close();
     
   }

@@ -1,0 +1,25 @@
+location-picker {
+    .picker {
+        margin-top: 24px;
+    }
+    
+    .map-image-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30rem;
+        max-width: 100%;
+        height: 20rem;
+        max-height: 30vh;
+        margin: auto;
+    
+    }
+    
+    .map-image {
+        border: 1px solid color($colors, primary, base);
+        width: 100%;
+        height: 100%;
+        padding: 4px;
+        object-fit: cover;
+    }
+}

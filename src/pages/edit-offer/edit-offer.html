@@ -1,22 +1,21 @@
 <!--
-  Generated template for the AddOfferPage page.
+  Generated template for the EditOfferPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>Create an offer</ion-title>
+    <ion-title>Edit Offer</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="onAddOffer()" [disabled]="!form.valid || !datesValid()">
-        <ion-icon name="checkmark"></ion-icon>
+      <button ion-button icon-only (click)="onEditOffer()" [disabled]="!form.valid || !datesValid()">
+        <ion-icon name="create"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-
   <form [formGroup]="form" >
     <ion-grid>
       <ion-row>

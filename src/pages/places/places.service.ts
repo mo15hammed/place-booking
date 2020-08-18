@@ -161,6 +161,66 @@ export class PlacesService {
 
   }
 
+  editPlace(placeId: string, title: string, description: string, price: number, dateFrom: Date, dateTo: Date, location: PlaceLocation) {
+
+    let updatedPlaces: Place[];
+    // return this.places
+    //   .pipe(
+    //     take(1),
+    //     switchMap(places => {
+    //       if (places || places.length < 0) {
+    //         return this.fetchOffers();
+    //       } 
+    //     }),
+    //     switchMap(places => {
+    //       updatedPlaces = [...places];
+    //       console.log(updatedPlaces);
+    //       const placeIndex = places.findIndex(p => p.id == placeId);
+    //       const oldPlace = updatedPlaces[placeIndex];
+    //       updatedPlaces[placeIndex] = new Place(
+    //         placeId,
+    //         title,
+    //         description,
+    //         oldPlace.imageUrl,
+    //         price,
+    //         dateFrom,
+    //         dateTo,
+    //         location,
+    //         this.authService.userId
+    //       );
+
+    //       return this.http.put(`https://placebooking-5d7b2.firebaseio.com/offered-places/${placeId}.json`, {...updatedPlaces[placeIndex], id: null});
+    //     }),
+    //     tap(() => {return this._places.next(updatedPlaces)})
+    //   );
+
+      return this.fetchOffers().pipe(
+        take(1),
+        switchMap(places => {
+          updatedPlaces = [...places];
+          console.log(updatedPlaces);
+          const placeIndex = places.findIndex(p => p.id == placeId);
+          const oldPlace = updatedPlaces[placeIndex];
+          updatedPlaces[placeIndex] = new Place(
+            placeId,
+            title,
+            description,
+            oldPlace.imageUrl,
+            price,
+            dateFrom,
+            dateTo,
+            location,
+            this.authService.userId
+          );
+
+          return this.http.put(`https://placebooking-5d7b2.firebaseio.com/offered-places/${placeId}.json`, {...updatedPlaces[placeIndex], id: null});
+        }),
+        tap(() => {return this._places.next(updatedPlaces)})
+      )
+
+
+  }
+
 }
 
 /**

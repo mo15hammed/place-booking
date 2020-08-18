@@ -8,6 +8,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { MyApp } from './app.component';
 import { PlacesService } from '../pages/places/places.service';
 import { AuthService } from '../pages/auth/auth.service';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { AuthService } from '../pages/auth/auth.service';
   imports: [
     BrowserModule,
     HttpClientModule,
+    ComponentsModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],

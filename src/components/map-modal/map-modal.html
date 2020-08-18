@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>MAP</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="onSubmit()" [disabled]="newPlaceLocation.lat==0 && newPlaceLocation.lng==0">Submit</button>
+    </ion-buttons>
+    <ion-buttons start>
+      <button ion-button (click)="onCancel()">Cancel</button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div #map id="map" ></div>
+  
+</ion-content>

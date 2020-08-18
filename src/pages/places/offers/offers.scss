@@ -1,12 +1,18 @@
 page-offers {
+
+    ion-label.item-content {
+        padding-top: 4px;
+        padding-bottom: 4px;
+    }
     h1 {
-        color: var(--ion-color-dark);
+        color: color($colors, primary, base);
         font-size: 18px;
         font-weight: bold;
-        border: 1px solid var(--ion-color-primary);
+        border: 1px solid color($colors, primary, base);
         border-radius: 10px;
-        padding: 8px;
+        padding: 6px;
         margin-bottom: 8px;
+
     }
     
     div {
@@ -27,4 +33,5 @@ page-offers {
         padding: 0px !important;
         min-width: 70px !important;
     }
+
 }

@@ -27,4 +27,9 @@ export class OfferDetailsPage {
     console.log('ionViewDidLoad OfferDetailsPage');
   }
 
+
+  onEdit(offer: Place) {
+    this.navCtrl.push('EditOfferPage', {'offer': offer});
+  }
+
 }

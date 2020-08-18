@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { IonicPage, NavController, NavParams, Tabs } from 'ionic-angular';
 
 /**
  * Generated class for the PlacesPage page.
@@ -14,26 +14,23 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'places.html',
 })
 export class PlacesPage {
-
   discover = 'DiscoverPage';
   offers = 'OffersPage';
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
  
+
+  ngOnInit() {
+    console.log("Places starting..............");
+  
+  }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad PlacesPage');
   }
 
-  onClick() {
-    console.log('!!!!!!!!!!!!!!!!!!!!!!');
-    
-    this.navCtrl.push('BookingsPage');
+  ionViewWillEnter() {
+    console.log('ionViewWillEnter PlacesPage');
   }
-
-  openPage(page: string) {
-    console.log('Page Opened !!');
-
-  }
-
 }

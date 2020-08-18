@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, Loading, AlertController } from 'ionic-angular';
-import { PlacesService } from '../places/places.service';
+import { IonicPage, NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Place } from '../places/place.model';
+import { PlaceLocation } from '../places/location.model';
+import { PlacesService } from '../places/places.service';
 
 /**
- * Generated class for the AddOfferPage page.
+ * Generated class for the EditOfferPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -12,74 +14,77 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @IonicPage()
 @Component({
-  selector: 'page-add-offer',
-  templateUrl: 'add-offer.html',
+  selector: 'page-edit-offer',
+  templateUrl: 'edit-offer.html',
 })
-export class AddOfferPage {
-
-  // private placeLocation;
-
+export class EditOfferPage {
+  
   private form: FormGroup;
 
+  private offer: Place;
+  private placeLocation: PlaceLocation;
+
   constructor(
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController,
     public navCtrl: NavController,
     public navParams: NavParams,
-    private placesService: PlacesService,
-    private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController) {
+    private placesService: PlacesService
+    ) {
+    this.offer = navParams.get('offer');
+    this.placeLocation = this.offer.location;
   }
 
   ngOnInit() {
     this.form = new FormGroup({
-      title: new FormControl(null, {
+      title: new FormControl(this.offer.title, {
         updateOn: 'change',
         validators: [Validators.required]
       }),
-      description: new FormControl(null, {
+      description: new FormControl(this.offer.description, {
         updateOn: 'change',
         validators: [Validators.required, Validators.minLength(4), Validators.maxLength(180)]
       }),
-      price: new FormControl(null, {
+      price: new FormControl(this.offer.price, {
         updateOn: 'change',
         validators: [Validators.required, Validators.min(1)]
       }),
-      dateFrom: new FormControl(new Date().toISOString(), {
+      dateFrom: new FormControl(this.offer.availableFrom.toISOString(), {
         updateOn: 'blur',
         validators: [Validators.required]
       }),
-      dateTo: new FormControl(new Date().toISOString(), {
+      dateTo: new FormControl(this.offer.availableTo.toISOString(), {
         updateOn: 'blur',
         validators: [Validators.required]
       }),
-      location: new FormControl(null, {
+      location: new FormControl(this.placeLocation, {
         validators: [Validators.required]
       })
     });
 
-    
+
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad AddOfferPage');
+    console.log('ionViewDidLoad EditOfferPage');
   }
 
 
-  onLocationPicked(event: any) {
+  onLocationPicked(event) {
     console.log(event);
-    // this.placeLocation = event;
     this.form.patchValue({location: event})
   }
 
-  onAddOffer() {
-    
+  onEditOffer() {
+  
     if (!this.form.valid || !this.datesValid()) {
       return;
     }
-
-    const loading = this.loadingCtrl.create({content: 'Creating new offer...'});
+    
+    const loading = this.loadingCtrl.create({content: 'Updating offer data...'});
     const alert = this.alertCtrl.create({
-      title: 'Offer Created !!',
-      message: `You created a new offer with title: ${this.form.value.title}`,
+      title: 'Offer Updated !!',
+      message: `You have updated this offer successfully!`,
       buttons: ['Okay'],
     });
 
@@ -88,7 +93,8 @@ export class AddOfferPage {
     })
 
     loading.present();
-    this.placesService.addPlace(
+    this.placesService.editPlace(
+      this.offer.id,
       this.form.value.title,
       this.form.value.description,
       this.form.value.price,
@@ -113,5 +119,4 @@ export class AddOfferPage {
     }
     return false;
   }
-
 }

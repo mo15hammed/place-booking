@@ -12,8 +12,43 @@
 
 <ion-content text-center>
   <img [src]="loadedPlace.imageUrl"/>
-  <p padding>{{ loadedPlace.description }}</p>
+
+<ion-grid padding>
+  <ion-row>
+    <ion-col col-12 col-sm-6 offset-sm-3>
+      <p padding-top>{{ loadedPlace.description }}</p>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col no-padding col-12 col-sm-6 offset-sm-3>
+      <ion-icon class="space-left" name="calendar" color="primary"></ion-icon>
+      <span class="space-left">{{loadedPlace.availableFrom | date}}</span>
+      <span>&nbsp;&nbsp;&nbsp; to &nbsp;&nbsp;&nbsp;</span>
+      <ion-icon class="space-right" name="calendar" color="primary"></ion-icon>
+      <span class="space-right">{{ loadedPlace.availableTo | date}}</span>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col col-12 col-sm-6 offset-sm-3>
+      <img [src]="loadedPlace.location.staticMapImageUrl" />
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col col-12 col-sm-6 offset-sm-3>
+      <p>{{ loadedPlace.location.address }}</p>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col col-12 col-sm-6 offset-sm-3>
+      <button ion-button color="warning" (click)="onBookPlace()" block>Book Now!</button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
 
 
-  <button ion-button color="warning" (click)="onBookPlace()" block>Book Now!</button>
+
+
+  
+
+
 </ion-content>

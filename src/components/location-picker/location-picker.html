@@ -1,0 +1,12 @@
+<div class="picker">
+  
+  <button ion-button (click)="onPresentMapModal()" block margin-bottom icon-start>
+    <ion-icon name="map"></ion-icon>
+    Select Location
+  </button>
+  <div class="map-image-container">
+    <ion-spinner *ngIf="isLoading" ></ion-spinner>
+    <img *ngIf="placeLocation && !isLoading" [src]="placeLocation.staticMapImageUrl" class="map-image"/>
+  </div>
+
+</div>

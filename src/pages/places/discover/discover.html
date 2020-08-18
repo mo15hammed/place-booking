@@ -15,7 +15,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content text-center >
+<ion-content text-center padding>
 
   <ion-segment (ionChange)="onFilterPlaces($event)" [(ngModel)]="selectedPlaces">
     <ion-segment-button value="all">All Places</ion-segment-button>
@@ -25,28 +25,27 @@
 
   <ion-spinner *ngIf="isLoading" margin-top></ion-spinner>
 
-  <ion-grid no-padding >
+  <ion-grid  >
     <ion-row *ngIf="!isLoading">
       <ion-col col-12 col-sm-6 offset-sm-3>
         <ion-card>
-          <img src="https://1.bp.blogspot.com/-t26_UtH2cyM/UYpbaO1q8zI/AAAAAAAAPJw/879aic4E7-M/s1600/020-P1820020.JPG"/>
+          <img [src]="relevantPlaces[0].imageUrl"/>
           <ion-card-content text-center>
-            <p>{{20 | currency}} / Night</p>
+            <p>{{relevantPlaces[0].price | currency}} / Night</p>
             <ion-card-title>
-              Place Title
+              {{ relevantPlaces[0].title }}
             </ion-card-title>
             <p>
-              The most popular industrial group ever, and largely
-              responsible for bringing the music to a mass audience.
+              {{ relevantPlaces[0].description }}
             </p>
           </ion-card-content>
-          <button ion-button clear small color='primary' float-right>More</button>
+          <button ion-button clear small color='primary' float-right (click)="onOpenPlaceDetails(relevantPlaces[0])">More</button>
         </ion-card>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col col-12 col-sm-6 offset-sm-3>
-        <ion-list [virtualScroll]="loadedPlaces" approxItemHeight="100px">
+        <ion-list [virtualScroll]="loadedListPlaces" approxItemHeight="96px">
           <button ion-item *virtualItem="let place" (click)="onOpenPlaceDetails(place)">
             <ion-thumbnail item-start>
               <ion-img [src]="place.imageUrl"></ion-img>
