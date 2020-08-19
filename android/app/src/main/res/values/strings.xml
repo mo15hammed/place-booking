@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">place-booking</string>
+    <string name="title_activity_main">place-booking</string>
+    <string name="package_name">com.mo15hammed.placebooking</string>
+    <string name="custom_url_scheme">com.mo15hammed.placebooking</string>
+</resources>

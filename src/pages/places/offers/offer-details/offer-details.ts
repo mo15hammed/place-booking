@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { Place } from '../../place.model';
+import { MapModalComponent } from '../../../../components/map-modal/map-modal';
 
 
 /**
@@ -19,7 +20,11 @@ export class OfferDetailsPage {
 
   private loadedOffer: Place;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    private mapModalCtrl: ModalController,
+    public navCtrl: NavController,
+    public navParams: NavParams
+    ) {
     this.loadedOffer = navParams.get('offer');
   }
 
@@ -32,4 +37,7 @@ export class OfferDetailsPage {
     this.navCtrl.push('EditOfferPage', {'offer': offer});
   }
 
+  previewMap() {
+    this.mapModalCtrl.create(MapModalComponent, {'place-location': this.loadedOffer.location, 'readonly': true}).present();
+  }
 }

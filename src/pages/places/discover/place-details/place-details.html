@@ -16,7 +16,7 @@
 <ion-grid padding>
   <ion-row>
     <ion-col col-12 col-sm-6 offset-sm-3>
-      <p padding-top>{{ loadedPlace.description }}</p>
+      <p>{{ loadedPlace.description }}</p>
     </ion-col>
   </ion-row>
   <ion-row>
@@ -30,7 +30,7 @@
   </ion-row>
   <ion-row>
     <ion-col col-12 col-sm-6 offset-sm-3>
-      <img [src]="loadedPlace.location.staticMapImageUrl" />
+      <img [src]="loadedPlace.location.staticMapImageUrl" (click)="previewMap()" width="300" height="200"/>
     </ion-col>
   </ion-row>
   <ion-row>
@@ -40,7 +40,7 @@
   </ion-row>
   <ion-row>
     <ion-col col-12 col-sm-6 offset-sm-3>
-      <button ion-button color="warning" (click)="onBookPlace()" block>Book Now!</button>
+      <button ion-button color="warning" (click)="onBookPlace()" *ngIf="isBookable" block>Book Now!</button>
     </ion-col>
   </ion-row>
 </ion-grid>

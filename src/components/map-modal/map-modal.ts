@@ -26,7 +26,7 @@ export class MapModalComponent implements OnDestroy{
   marker: any;
   mapClickListenr: EventListener;
 
-
+  private readonly = false;
   oldPlaceLocation: PlaceLocation = {lat: 0, lng: 0,staticMapImageUrl: "", address: ""};
   newPlaceLocation: PlaceLocation = {lat: 0, lng: 0,staticMapImageUrl: "", address: ""};
 
@@ -36,6 +36,7 @@ export class MapModalComponent implements OnDestroy{
   constructor(private navParams: NavParams, private viewCtrl: ViewController) {
     console.log('Hello MapModalComponent Component');
     this.oldPlaceLocation = navParams.get('place-location');
+    this.readonly = navParams.get('readonly');
   }
 
 
@@ -56,6 +57,10 @@ export class MapModalComponent implements OnDestroy{
     this.initMap();
   }
 
+
+  /**
+   * setting up the map and its marker
+   */
   initMap() {
 
     let mapOptions = {
@@ -77,23 +82,23 @@ export class MapModalComponent implements OnDestroy{
       })
     }
 
-    this.mapClickListenr = this.map.addListener('click', event => {      
-      if (this.marker) {
-        this.marker.setMap(null);
-      }
-      
-      this.marker = new google.maps.Marker({
-        map: this.map,
-        position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
+    if (!this.readonly) {
+      this.mapClickListenr = this.map.addListener('click', event => {      
+        if (this.marker) {
+          this.marker.setMap(null);
+        }
+        
+        this.marker = new google.maps.Marker({
+          map: this.map,
+          position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
+        });
+        
+        this.newPlaceLocation.lat = this.marker.position.lat();
+        this.newPlaceLocation.lng = this.marker.position.lng();
+
+        
       });
-
-      
-      this.newPlaceLocation.lat = this.marker.position.lat();
-      this.newPlaceLocation.lng = this.marker.position.lng();
-
-      
-    });
-
+    }
   }
 
 

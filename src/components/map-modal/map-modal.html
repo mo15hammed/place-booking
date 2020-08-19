@@ -1,7 +1,8 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>MAP</ion-title>
-    <ion-buttons end>
+    <ion-title *ngIf="!readonly">MAP</ion-title>
+    <ion-title *ngIf="readonly">{{ oldPlaceLocation.address }}</ion-title>
+    <ion-buttons end *ngIf="!readonly">
       <button ion-button (click)="onSubmit()" [disabled]="newPlaceLocation.lat==0 && newPlaceLocation.lng==0">Submit</button>
     </ion-buttons>
     <ion-buttons start>

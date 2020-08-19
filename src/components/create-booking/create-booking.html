@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Create Booking</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-12 col-sm-6 offset-sm-3>
+          <ion-item>
+            <ion-label floating>
+              First name
+            </ion-label>
+            <ion-input type="text" formControlName="firstname"></ion-input>
+          </ion-item>
+          <div *ngIf="!form.get('firstname').valid && form.get('firstname').touched" class="error-msg">
+            <ion-icon name="alert"></ion-icon>
+            First name is required.
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12 col-sm-6 offset-sm-3>
+          <ion-item>
+            <ion-label floating>
+              Last name
+            </ion-label>
+            <ion-input type="text" formControlName="lastname"></ion-input>
+          </ion-item>
+          <div *ngIf="!form.get('lastname').valid && form.get('lastname').touched" class="error-msg">
+            <ion-icon name="alert"></ion-icon>
+            Last name is required.
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12 col-sm-6 offset-sm-3>
+          <ion-item>
+            <ion-label floating>
+              Number of guests
+            </ion-label>
+            <ion-select formControlName="numberOfGuests">
+              <ion-option value="1">1</ion-option>
+              <ion-option value="2">2</ion-option>
+              <ion-option value="3">3</ion-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12 col-sm-6 offset-sm-3>
+          <ion-item>
+            <ion-label floating>Available from</ion-label>
+            <ion-datetime [min]="minDateFrom" [max]="maxDateFrom" formControlName="dateFrom"></ion-datetime>
+          </ion-item>
+          <ion-item>
+            <ion-label floating>Available to</ion-label>
+            <ion-datetime [min]="minDateTo" [max]="maxDateTo" formControlName="dateTo"></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12 col-sm-6 offset-sm-3>
+          <button ion-button block color="warning" (click)="onBookPlace()" [disabled]="!form.valid || !datesValid()">
+            Book Now !!
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

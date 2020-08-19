@@ -88,10 +88,7 @@ export class EditOfferPage {
       buttons: ['Okay'],
     });
 
-    alert.onDidDismiss(() => {
-      this.navCtrl.pop();
-    })
-
+    
     loading.present();
     this.placesService.editPlace(
       this.offer.id,
@@ -103,6 +100,15 @@ export class EditOfferPage {
       this.form.value.location,
     ).subscribe(() => {
       loading.dismiss();
+      alert.present();
+      alert.onDidDismiss(() => {
+        this.navCtrl.pop();
+      })
+  
+    }, error => {
+      console.log("ERROR: ", error);
+      alert.setTitle('Failed !!');
+      alert.setMessage('Something Went Wrong. Please try again')
       alert.present();
     })
 

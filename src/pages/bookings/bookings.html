@@ -6,7 +6,7 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>bookings</ion-title>
+    <ion-title>Your Bookings</ion-title>
     <ion-buttons left>
       <button ion-button menuToggle icon-only>
         <ion-icon name='menu'></ion-icon>
@@ -17,8 +17,35 @@
 
 <ion-content padding>
 
-  <button icon-right ion-button clear >
-    <ion-icon name="pin"></ion-icon>
-    Authentication
-</button>
+  <ion-spinner *ngIf="isLoading" margin-top></ion-spinner>
+  <ion-grid *ngIf="!isLoading">
+    <ion-row *ngIf="!loadedBookings || loadedBookings.length <= 0">
+      <ion-col text-center>
+        <p>You haven't made any booking yet.</p>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="loadedBookings && loadedBookings.length > 0">
+      <ion-col col-12 col-md-6 offset-md-3>
+        <ion-list>
+          <ion-item-sliding *ngFor="let booking of loadedBookings" #ionItemSliding>
+            <ion-item>
+              <ion-avatar item-start>
+                <img [src]="booking.placeImage"/>
+              </ion-avatar>
+              <ion-label class="ion-margin-start">
+                <h2>{{ booking.placeTitle }}</h2>
+                <p>Guests: {{ booking.numberOfGuests }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item-options>
+              <button ion-button icon-only color="danger" class="sliding-button" (click)="onCancelBooking(booking.id, ionItemSliding)">
+                <ion-icon name="trash"></ion-icon>
+              </button>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
 </ion-content>

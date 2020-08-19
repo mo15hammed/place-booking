@@ -20,7 +20,7 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col padding-bottom>
+      <ion-col >
         <p >{{ loadedOffer.description }}</p>
       </ion-col>
     </ion-row>
@@ -35,16 +35,16 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <img [src]="loadedOffer.location.staticMapImageUrl" />
+        <img [src]="loadedOffer.location.staticMapImageUrl"  (click)="previewMap()" width="300" height="200" />
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col>
+      <ion-col no-padding>
         <p>{{ loadedOffer.location.address }}</p>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col margin-top>
+      <ion-col >
         <button ion-button color="warning" (click)="onEdit(loadedOffer)" block>Edit Offer</button>
       </ion-col>
     </ion-row>
