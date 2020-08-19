@@ -32,7 +32,6 @@ export class DiscoverPage implements OnInit{
 
   ngOnInit() {
     this.selectedPlaces = 'all';
-    this.isLoading = true;
     this.placesService.places.subscribe(places => {
       this.loadedPlaces = places;
       if (this.selectedPlaces == 'bookable') {
@@ -46,7 +45,14 @@ export class DiscoverPage implements OnInit{
   }
 
   ionViewWillEnter() {
-    this.placesService.fetchPlaces().subscribe(() => this.isLoading = false);
+    this.isLoading = true;
+    this.placesService.fetchPlaces().subscribe(() => {
+      this.isLoading = false
+    }, error => {
+      console.log("ERROR: ", error);
+      this.isLoading = false;
+      
+    });
   }
 
   ionViewDidLoad() {

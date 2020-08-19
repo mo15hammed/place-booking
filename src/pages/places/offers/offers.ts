@@ -34,6 +34,9 @@ export class OffersPage implements OnInit{
     this.isLoading = true;
     this.placesService.fetchOffers().subscribe(offers => { 
       this.isLoading = false;
+    }, error => {
+      console.log("ERROR: ", error);
+      this.isLoading = false;
     });
 
 

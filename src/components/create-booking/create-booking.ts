@@ -50,7 +50,6 @@ export class CreateBookingComponent implements OnInit{
 
   ngOnInit() {
 
-    this.bookingService.fetchBookings().subscribe();
     this.form = new FormGroup({
       firstname: new FormControl(null, {
         updateOn: 'change',

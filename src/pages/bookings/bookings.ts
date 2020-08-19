@@ -41,6 +41,9 @@ export class BookingsPage implements OnInit {
     this.isLoading = true;
     this.bookingService.fetchBookings().subscribe(() => {
       this.isLoading = false;
+    }, error => {
+      console.log("ERROR: ", error);
+      this.isLoading = false;
     })
   }
 
