@@ -101,6 +101,7 @@ export class AddOfferPage {
       });
     }, error => {
       console.log("ERROR: ", error);
+      loading.dismiss();
       alert.setTitle('Failed !!');
       alert.setMessage('Something Went Wrong. Please try again')
       alert.present();

@@ -106,9 +106,14 @@ export class PlacesService {
    * @returns an Observable
    */
   fetchOffers() {
-    return this.http
-    .get<{[key: string]: PlaceInterface}>(`https://placebooking-5d7b2.firebaseio.com/offered-places.json?orderBy="userId"&equalTo="${this.authService.userId}"`)
-    .pipe(
+
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        console.log(userId);
+        return this.http
+        .get<{[key: string]: PlaceInterface}>(`https://placebooking-5d7b2.firebaseio.com/offered-places.json?orderBy="userId"&equalTo="${userId}"`)
+      }),
       map(resData => {
         const places = [];
         for (const key in resData) {
@@ -127,9 +132,7 @@ export class PlacesService {
           }
         }
 
-        return places.filter(p => {
-          return p.userId === this.authService.userId;
-        });
+        return places;
       }),
       tap(places => {
         console.log("data fetched again");
@@ -151,25 +154,26 @@ export class PlacesService {
    */
   addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date, location: PlaceLocation) {
 
-    let generated_id: string;
+    let newPlace: Place;
 
-    const newPlace = new Place(
-      new Date().toISOString(),
-      title,description,
-      "https://i.pinimg.com/originals/65/8f/77/658f77b9b527f89922ba996560a3e2b0.jpg",
-      price,
-      dateFrom,
-      dateTo,
-      location,
-      this.authService.userId
-    );
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        newPlace = new Place(
+          new Date().toISOString(),
+          title,description,
+          "https://i.pinimg.com/originals/65/8f/77/658f77b9b527f89922ba996560a3e2b0.jpg",
+          price,
+          dateFrom,
+          dateTo,
+          location,
+          userId
+        );
 
-    return this.http.post<{name: string}>('https://placebooking-5d7b2.firebaseio.com/offered-places.json', {...newPlace, id: null})
-    .pipe(
-      
+        return this.http.post<{name: string}>('https://placebooking-5d7b2.firebaseio.com/offered-places.json', {...newPlace, id: null});
+      }),
       switchMap(res => {
-        generated_id = res.name;
-        newPlace.id = generated_id;
+        newPlace.id = res.name;
         return this.places;
       }),
       take(1),
@@ -178,7 +182,7 @@ export class PlacesService {
         this._places.next(places.concat(newPlace));
         
       })
-    )
+    );
 
   }
 
@@ -197,6 +201,9 @@ export class PlacesService {
 
     let updatedPlaces: Place[];
 
+
+
+
     return this.fetchOffers().pipe(
       take(1),
       switchMap(places => {
@@ -213,7 +220,7 @@ export class PlacesService {
           dateFrom,
           dateTo,
           location,
-          this.authService.userId
+          oldPlace.userId
         );
 
         return this.http.put(`https://placebooking-5d7b2.firebaseio.com/offered-places/${placeId}.json`, {...updatedPlaces[placeIndex], id: null});

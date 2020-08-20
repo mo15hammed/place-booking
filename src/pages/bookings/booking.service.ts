@@ -36,33 +36,35 @@ export class BookingService {
      * @returns an Observable
     */
     fetchBookings() {
-
         const bookings = [];
-        return this.http
-            .get<{[key: string]: BookingInterface}>(`https://placebooking-5d7b2.firebaseio.com/booked-places.json?orderBy="userId"&equalTo="${this.authService.userId}"`)
-            .pipe(
-                take(1),
-                map(res => {
-                    for (let key in res) {
-                        bookings.push(new Booking(
-                            key,
-                            res[key].placeId,
-                            res[key].placeTitle,
-                            res[key].placeImage,
-                            res[key].userId,
-                            res[key].firstname,
-                            res[key].lastname,
-                            res[key].numberOfGuests,
-                            new Date(res[key].bookedFrom),
-                            new Date(res[key].bookedTo),
-                        ));
-                    }
-                    return bookings;
-                }),
-                tap(bookings => {
-                    this._bookings.next(bookings);
-                })
-            );
+        return this.authService.userId.pipe(
+            take(1),
+            switchMap(userId => {
+                return this.http
+                    .get<{[key: string]: BookingInterface}>(`https://placebooking-5d7b2.firebaseio.com/booked-places.json?orderBy="userId"&equalTo="${userId}"`)
+            }),
+            take(1),
+            map(res => {
+                for (let key in res) {
+                    bookings.push(new Booking(
+                        key,
+                        res[key].placeId,
+                        res[key].placeTitle,
+                        res[key].placeImage,
+                        res[key].userId,
+                        res[key].firstname,
+                        res[key].lastname,
+                        res[key].numberOfGuests,
+                        new Date(res[key].bookedFrom),
+                        new Date(res[key].bookedTo),
+                    ));
+                }
+                return bookings;
+            }),
+            tap(bookings => {
+                this._bookings.next(bookings);
+            })
+        )
 
     }
 
@@ -85,22 +87,29 @@ export class BookingService {
         place: Place
     ) {
 
-        const newBooking = new Booking(
-            new Date().toISOString(),
-            place.id,
-            place.title,
-            place.imageUrl,
-            this.authService.userId,
-            firstname,
-            lastname,
-            numberOfGuests,
-            dateFrom,
-            dateTo
-        );
-        return this.http.post<{name: string}>(
-            'https://placebooking-5d7b2.firebaseio.com/booked-places.json',
-            {...newBooking, id: null}
-        ).pipe(
+        let newBooking : Booking;
+        return this.authService.userId.pipe(
+            take(1),
+            switchMap(userId => {
+                newBooking = new Booking(
+                    new Date().toISOString(),
+                    place.id,
+                    place.title,
+                    place.imageUrl,
+                    userId,
+                    firstname,
+                    lastname,
+                    numberOfGuests,
+                    dateFrom,
+                    dateTo
+                );
+
+                return this.http.post<{name: string}>(
+                    'https://placebooking-5d7b2.firebaseio.com/booked-places.json',
+                    {...newBooking, id: null}
+                );
+
+            }),
             switchMap(res => {
                 newBooking.id = res.name;
                 return this.bookings;
@@ -109,7 +118,8 @@ export class BookingService {
             tap(bookings => {
                 this._bookings.next(bookings.concat(newBooking));
             })
-        );
+        )
+
     }
 
 

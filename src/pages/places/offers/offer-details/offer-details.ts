@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { Place } from '../../place.model';
 import { MapModalComponent } from '../../../../components/map-modal/map-modal';
+import { PlacesService } from '../../places.service';
 
 
 /**
@@ -18,14 +19,23 @@ import { MapModalComponent } from '../../../../components/map-modal/map-modal';
 })
 export class OfferDetailsPage {
 
+  private offerId: string;
   private loadedOffer: Place;
 
   constructor(
     private mapModalCtrl: ModalController,
     public navCtrl: NavController,
-    public navParams: NavParams
+    public navParams: NavParams,
+    private placesService: PlacesService
     ) {
     this.loadedOffer = navParams.get('offer');
+    this.offerId = navParams.get('offer').id;
+  }
+
+  ionViewWillEnter() {
+    this.placesService.places.subscribe(places => {      
+      this.loadedOffer = places.find(p => {return p.id == this.offerId})
+    });
   }
 
   ionViewDidLoad() {

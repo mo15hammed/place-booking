@@ -17,7 +17,7 @@
 
 <ion-content text-center padding>
 
-  <ion-segment (ionChange)="onFilterPlaces($event)" [(ngModel)]="selectedPlaces">
+  <ion-segment *ngIf="isAuthed" (ionChange)="onFilterPlaces($event)" [(ngModel)]="selectedPlaces">
     <ion-segment-button value="all">All Places</ion-segment-button>
     <ion-segment-button value="bookable">Bookable Places</ion-segment-button>
   </ion-segment>

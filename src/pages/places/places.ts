@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, Tabs } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Tabs, MenuController } from 'ionic-angular';
+import { AuthService } from '../auth/auth.service';
 
 /**
  * Generated class for the PlacesPage page.
@@ -14,10 +15,12 @@ import { IonicPage, NavController, NavParams, Tabs } from 'ionic-angular';
   templateUrl: 'places.html',
 })
 export class PlacesPage {
+
   discover = 'DiscoverPage';
   offers = 'OffersPage';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private menuCtrl: MenuController, public navCtrl: NavController, public navParams: NavParams) {
+    this.menuCtrl.enable(true);
   }
  
 

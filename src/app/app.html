@@ -22,7 +22,7 @@
 
         <button ion-item icon-start (click)="openPage('auth')">
             <ion-icon name="log-out" color="grey" margin-right style="padding-top: 2px;"></ion-icon>
-            Authentication
+            {{ isAuthed ? 'Logout' : 'Login' }}
         </button>
 
       </ion-list>

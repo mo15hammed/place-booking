@@ -4,6 +4,7 @@ import { Place } from '../../place.model';
 import { AuthService } from '../../../auth/auth.service';
 import { CreateBookingComponent } from '../../../../components/create-booking/create-booking';
 import { MapModalComponent } from '../../../../components/map-modal/map-modal';
+import { take } from 'rxjs/operators';
 
 /**
  * Generated class for the PlaceDetailsPage page.
@@ -34,7 +35,11 @@ export class PlaceDetailsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.isBookable = this.loadedPlace.userId != this.authService.userId;
+
+    this.authService.userId.pipe(take(1)).subscribe(userId => {
+      this.isBookable = this.loadedPlace.userId != userId;
+    });
+
   }
 
   ionViewDidLoad() {

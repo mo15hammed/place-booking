@@ -99,9 +99,11 @@ export class EditOfferPage {
       new Date(this.form.value.dateTo),
       this.form.value.location,
     ).subscribe(() => {
+      
       loading.dismiss();
       alert.present();
       alert.onDidDismiss(() => {
+        
         this.navCtrl.pop();
       })
   
