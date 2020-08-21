@@ -10,29 +10,28 @@ export class MyApp {
 
   private isAuthed = false;
 
-  rootPage:any = 'AuthPage';
+  rootPage:any;
   @ViewChild('content') nav: Nav;
 
   constructor(platform: Platform, private menuCtrl: MenuController, private authService: AuthService) {
     
     platform.ready().then(() => {
       if (Capacitor.isPluginAvailable('SplashScreen')) {
-        Plugins.SplashScreen.hide();
         
-        this.authService.getIsUserAuthenticated().subscribe(auth => {
-          this.isAuthed = auth;
-          console.log("OBS AUTH: ", auth);
-        });
+        Plugins.SplashScreen.hide();
+        this.authService.autoLogin().subscribe(auth => {
+          this.rootPage = auth ? 'PlacesPage' : 'AuthPage';
+        })
+
       }
     });
   }
 
-  ngOnInit() {    
-    this.authService.autoLogin().subscribe(auth => {
-      console.log("AUTO AUTH: ", auth);
-      if (auth) {
-        this.rootPage = "PlacesPage";
-      }
+  ngOnInit() {
+    
+
+    this.authService.getIsUserAuthenticated().subscribe(auth => {
+      this.isAuthed = auth;
     });
   }
 
@@ -53,7 +52,7 @@ export class MyApp {
           console.log('logging out')
           this.authService.logout();
         } else {
-          this.nav.setRoot('AuthPage')
+          this.nav.push('AuthPage')
         }
         break;
     }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, Segment } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Segment, Refresher } from 'ionic-angular';
 import { Place } from '../place.model';
 import { PlacesService } from '../places.service';
 import { AuthService } from '../../auth/auth.service';
-import { take } from 'rxjs/operators';
+import { take, tap, switchMap } from 'rxjs/operators';
 
 
 /**
@@ -23,36 +23,41 @@ export class DiscoverPage implements OnInit{
   private isAuthed = false;  
   private isLoading = false;
   private selectedPlaces: string;
-  private loadedPlaces: Place[];
+  private loadedPlaces = [];
   private relevantPlaces: Place[];
   private loadedListPlaces: Place[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private placesService: PlacesService, private authService: AuthService) {
-    authService.getIsUserAuthenticated().subscribe(auth => {
+    
+  }
+
+  ionViewCanEnter() {
+    this.authService.getIsUserAuthenticated().subscribe(auth => {
       this.isAuthed = auth;
-    })
+    });
   }
 
 
   ngOnInit() {
-
-//////////////////////////////////////////////////////
     this.selectedPlaces = 'all';
     this.placesService.places.subscribe(places => {
+    console.log('refresh', places);
+
       this.loadedPlaces = places;
+      this.relevantPlaces = this.loadedPlaces;
       if (this.selectedPlaces == 'bookable') {
         this.authService.userId.pipe(take(1)).subscribe(userId => {
           this.relevantPlaces = this.loadedPlaces.filter(place => { return place.userId != userId });
         });
-      } else {
-        this.relevantPlaces = this.loadedPlaces;
       }
       this.loadedListPlaces = this.relevantPlaces.slice(1);
     });
 
   }
 
-  ionViewWillEnter() {
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad DiscoverPage');
+
     this.isLoading = true;
     this.placesService.fetchPlaces().subscribe(() => {
       this.isLoading = false
@@ -63,9 +68,16 @@ export class DiscoverPage implements OnInit{
     });
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad DiscoverPage');
+
+  doRefresh(refresher: Refresher) {
+    
+    this.placesService.fetchPlaces().subscribe(() => {
+      refresher.complete();
+    }, error => {
+      console.log("ERROR: ", error);      
+    });
   }
+
 
   onOpenPlaceDetails(place: Place) {
     console.log(place);

@@ -36,26 +36,70 @@ export class PlacesService {
       ''
     ),
     new Place(
-      "p2",
-      "L'Amour Toujours",
-      "A romantic place in Paris.",
-      "https://upload.wikimedia.org/wikipedia/commons/e/e6/Paris_Night.jpg",
-      199.99,
-      new Date('2020-01-01'),
-      new Date('2020-12-31'),
+      "",
+      "",
+      "",
+      "",
+      0,
       null,
-      'a'
+      null,
+      null,
+      ''
     ),
     new Place(
-      "p3",
-      "The Foggy Palace",
-      "Not your average city trip.",
-      "https://i.pinimg.com/originals/65/8f/77/658f77b9b527f89922ba996560a3e2b0.jpg",
-      199.99,
-      new Date('2020-01-01'),
-      new Date('2020-12-31'),
+      "",
+      "",
+      "",
+      "",
+      0,
       null,
-      'abc'
+      null,
+      null,
+      ''
+    ),
+    new Place(
+      "",
+      "",
+      "",
+      "",
+      0,
+      null,
+      null,
+      null,
+      ''
+    ),
+    new Place(
+      "",
+      "",
+      "",
+      "",
+      0,
+      null,
+      null,
+      null,
+      ''
+    ),
+    new Place(
+      "",
+      "",
+      "",
+      "",
+      0,
+      null,
+      null,
+      null,
+      ''
+    ),
+    new Place(
+      "",
+      "",
+      "",
+      "",
+      0,
+      null,
+      null,
+      null,
+      ''
     ),
   ]);
 
@@ -63,7 +107,6 @@ export class PlacesService {
   get places() {
       return this._places.asObservable();
   }
-
 
   /**
    * fetches all places from firebase database
@@ -100,46 +143,64 @@ export class PlacesService {
     );
   }
 
-  
-  /**
-   * fetches all places offered by the current user from firebase database
-   * @returns an Observable
-   */
-  fetchOffers() {
 
+  getOffers() {
+    let userId = "";
     return this.authService.userId.pipe(
       take(1),
-      switchMap(userId => {
-        console.log(userId);
-        return this.http
-        .get<{[key: string]: PlaceInterface}>(`https://placebooking-5d7b2.firebaseio.com/offered-places.json?orderBy="userId"&equalTo="${userId}"`)
+      switchMap(id => {
+        userId = id;
+        return this.places;
       }),
-      map(resData => {
-        const places = [];
-        for (const key in resData) {
-          if (resData.hasOwnProperty(key)) {
-            places.push(new Place(
-              key,
-              resData[key].title,
-              resData[key].description,
-              resData[key].imageUrl,
-              resData[key].price,
-              new Date(resData[key].availableFrom),
-              new Date(resData[key].availableTo),
-              resData[key].location,
-              resData[key].userId,
-            ));
-          }
-        }
+      map( places => {
 
-        return places;
-      }),
-      tap(places => {
-        console.log("data fetched again");
-        this._places.next(places)
+        return places.filter(p => {
+          return p.userId == userId;
+        })
+
       })
-    );
+    )
   }
+  
+  // /**
+  //  * fetches all places offered by the current user from firebase database
+  //  * @returns an Observable
+  //  */
+  // fetchOffers() {
+
+  //   return this.authService.userId.pipe(
+  //     take(1),
+  //     switchMap(userId => {
+  //       console.log(userId);
+  //       return this.http
+  //       .get<{[key: string]: PlaceInterface}>(`https://placebooking-5d7b2.firebaseio.com/offered-places.json?orderBy="userId"&equalTo="${userId}"`)
+  //     }),
+  //     map(resData => {
+  //       const places = [];
+  //       for (const key in resData) {
+  //         if (resData.hasOwnProperty(key)) {
+  //           places.push(new Place(
+  //             key,
+  //             resData[key].title,
+  //             resData[key].description,
+  //             resData[key].imageUrl,
+  //             resData[key].price,
+  //             new Date(resData[key].availableFrom),
+  //             new Date(resData[key].availableTo),
+  //             resData[key].location,
+  //             resData[key].userId,
+  //           ));
+  //         }
+  //       }
+
+  //       return places;
+  //     }),
+  //     tap(places => {
+  //       console.log("data fetched again");
+  //       this._places.next(places)
+  //     })
+  //   );
+  // }
 
 
   /**
@@ -204,7 +265,7 @@ export class PlacesService {
 
 
 
-    return this.fetchOffers().pipe(
+    return this.fetchPlaces().pipe(
       take(1),
       switchMap(places => {
         updatedPlaces = [...places];

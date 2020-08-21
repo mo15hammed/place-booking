@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthPage {
 
+  private previousPage: string;
   private isLogin = true;
   private form: FormGroup;
 
@@ -33,7 +34,26 @@ export class AuthPage {
     this.menuCtrl.enable(false);
   }
 
+
+  ionViewCanEnter() {
+    this.authService.getIsUserAuthenticated().subscribe(auth => {
+      console.log("AUTO AUTH: ", auth);
+      if (auth) {
+        if (!this.navCtrl.canGoBack()) {
+          console.log('ifffffffffffffffff');
+          this.navCtrl.setRoot('PlacesPage');
+        }
+        return !auth;
+      } 
+    });
+  }
+
   ngOnInit() {
+
+    this.previousPage = this.navParams.get('go_back');
+
+
+
     this.form = new FormGroup({
       email: new FormControl(null, {
         updateOn: 'change',
@@ -69,7 +89,11 @@ export class AuthPage {
 
     authObs.subscribe(() => {
       loadingEl.dismiss();
-      this.navCtrl.setRoot('PlacesPage');
+
+      if (this.navCtrl.canGoBack()) {
+
+        this.navCtrl.pop();
+      }
     },
     errorRes => {
       console.log(errorRes);
@@ -91,12 +115,8 @@ export class AuthPage {
     });
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad AuthPage');
-  }
-
   skipAuth() {
-    this.navCtrl.push('PlacesPage');
+    this.navCtrl.setRoot('PlacesPage');
     this.authService.getIsUserAuthenticated().subscribe(x => console.log(x));
   }
 

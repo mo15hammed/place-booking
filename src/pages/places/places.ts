@@ -20,7 +20,6 @@ export class PlacesPage {
   offers = 'OffersPage';
 
   constructor(private menuCtrl: MenuController, public navCtrl: NavController, public navParams: NavParams) {
-    this.menuCtrl.enable(true);
   }
  
 
@@ -34,6 +33,7 @@ export class PlacesPage {
   }
 
   ionViewWillEnter() {
+    this.menuCtrl.enable(true);
     console.log('ionViewWillEnter PlacesPage');
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, ActionSheetController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ActionSheetController, ModalController, AlertController } from 'ionic-angular';
 import { Place } from '../../place.model';
 import { AuthService } from '../../../auth/auth.service';
 import { CreateBookingComponent } from '../../../../components/create-booking/create-booking';
@@ -20,10 +20,12 @@ import { take } from 'rxjs/operators';
 })
 export class PlaceDetailsPage implements OnInit {
 
+  private isAuthed = false;
   private isBookable = true;
   private loadedPlace: Place;
 
   constructor(
+    private alertCtrl: AlertController,
     private actSheetCtrl: ActionSheetController,
     private bookingModalCtrl: ModalController,
     private mapModalCtrl: ModalController,
@@ -40,6 +42,10 @@ export class PlaceDetailsPage implements OnInit {
       this.isBookable = this.loadedPlace.userId != userId;
     });
 
+    this.authService.getIsUserAuthenticated().subscribe(auth => {
+      this.isAuthed = auth;
+    });
+
   }
 
   ionViewDidLoad() {
@@ -54,6 +60,27 @@ export class PlaceDetailsPage implements OnInit {
   onBookPlace() {
     console.log('Book PLace');
     if (!this.isBookable) {
+      return;
+    }
+
+    if (!this.isAuthed) {
+      this.alertCtrl.create({
+        title: 'Unauthorized!',
+        message: 'you need to login first to perform this action',
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel'
+          },
+          {
+            text: 'Login',
+            handler: () => {
+              this.navCtrl.push('AuthPage', {'go_back': 'PlaceDetailsPage'})
+            }
+          },
+          
+        ]
+      }).present();
       return;
     }
 

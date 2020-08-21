@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, ItemSliding, LoadingController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ItemSliding, LoadingController, AlertController, MenuController, Refresher } from 'ionic-angular';
 import { BookingService } from './booking.service';
 import { Booking } from './booking.model';
+import { AuthService } from '../auth/auth.service';
 
 /**
  * Generated class for the BookingsPage page.
@@ -17,15 +18,18 @@ import { Booking } from './booking.model';
 })
 export class BookingsPage implements OnInit {
 
+  private isAuthed = false;
   private isLoading = false;
   private loadedBookings: Booking[];
 
   constructor(
+    private menuCtrl: MenuController,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     public navCtrl: NavController,
     public navParams: NavParams,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private authService: AuthService
     ) {
   }
 
@@ -33,22 +37,37 @@ export class BookingsPage implements OnInit {
     this.bookingService.bookings.subscribe(bookings => {
       this.loadedBookings = bookings;
       console.log(this.loadedBookings);
-      
     });
   }
 
+  ionViewCanEnter() {
+    this.authService.getIsUserAuthenticated().subscribe(auth => {
+      this.isAuthed = auth;
+    })
+  }
+
   ionViewWillEnter() {
+    this.menuCtrl.enable(true);
+  }
+
+  doRefresh(refresher: Refresher) {
+    this.bookingService.fetchBookings().subscribe(offers => {
+      refresher.complete();
+    }, error => {
+      console.log("ERROR: ", error);
+      refresher.complete();
+    });
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad BookingsPage');
     this.isLoading = true;
     this.bookingService.fetchBookings().subscribe(() => {
       this.isLoading = false;
     }, error => {
       console.log("ERROR: ", error);
       this.isLoading = false;
-    })
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad BookingsPage');
+    });
   }
 
   onCancelBooking(bookingId: string, ionItemSliding: ItemSliding) {
@@ -69,6 +88,10 @@ export class BookingsPage implements OnInit {
       alertEl.present();
     });
     ionItemSliding.close();
+  }
+
+  goToLogin() {
+    this.navCtrl.push('AuthPage');
   }
 
 }

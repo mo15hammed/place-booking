@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, ItemSliding } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ItemSliding, MenuController, Refresher } from 'ionic-angular';
 import { Place } from '../place.model';
 import { PlacesService } from '../places.service';
+import { AuthService } from '../../auth/auth.service';
+import { switchMap, take, tap, map } from 'rxjs/operators';
 
 
 /**
@@ -18,33 +20,73 @@ import { PlacesService } from '../places.service';
 })
 export class OffersPage implements OnInit{
 
+
+  private isAuthed = false;
   private isLoading = false;
   private loadedOffers: Place[];
-  constructor(public navCtrl: NavController, public navParams: NavParams, private placesService: PlacesService) {
+  constructor(
+    private menuCtrl: MenuController,
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private placesService: PlacesService,
+    private authService: AuthService,
+    ) {
   }
 
   ngOnInit() {
-    this.placesService.places.subscribe(offers => {
-      this.loadedOffers = offers;
+    // this.placesService.places.subscribe(offers => {
+    //   this.loadedOffers = offers;
       
+    // });
+  }
+
+  ionViewCanEnter() {
+    this.authService.getIsUserAuthenticated().subscribe(auth => {
+      this.isAuthed = auth;
     });
   }
 
   ionViewWillEnter() {
-    this.isLoading = true;
-    this.placesService.fetchOffers().subscribe(offers => { 
-      this.isLoading = false;
+    this.menuCtrl.enable(true);
+  }
+
+  doRefresh(refresher: Refresher) {
+    this.getOffers().subscribe(offers => {
+      refresher.complete();
+      this.loadedOffers = offers;
     }, error => {
       console.log("ERROR: ", error);
-      this.isLoading = false;
+      refresher.complete();
     });
+  }
 
-
+  getOffers() {
+    let userId = "";
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(id => {
+        userId = id;
+        return this.placesService.fetchPlaces();
+      }),
+      map(places => {
+        return places.filter(p => p.userId == userId);
+      })
+    );
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad OffersPage');
     
+    this.isLoading = true;
+
+    this.getOffers().subscribe(offers => {
+      this.isLoading = false;
+      this.loadedOffers = offers;
+    }, error => {
+      console.log("ERROR: ", error);
+      this.isLoading = false;
+    });
+
   }
 
   onOfferDetails(offer: Place) {
@@ -64,4 +106,8 @@ export class OffersPage implements OnInit{
     this.navCtrl.push('AddOfferPage')
   }
 
+
+  goToLogin() {
+    this.navCtrl.push('AuthPage');
+  }
 }
