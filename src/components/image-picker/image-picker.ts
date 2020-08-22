@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
-import { Camera, CameraResultType, CameraSource, Capacitor, CameraPhoto } from '@capacitor/core';
+import { Plugins, CameraResultType, CameraSource, Capacitor, CameraPhoto } from '@capacitor/core';
+const { Camera } = Plugins;
 
 /**
  * Generated class for the ImagePickerComponent component.

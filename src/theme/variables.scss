@@ -63,7 +63,7 @@ $item-wp-detail-push-show: true;
   font-size: 12px !important;
   margin-top: 8px !important;
   margin-bottom: 8px !important;
-  color:  #f53d3d !important;
+  color:  color($colors, danger, base) !important;
   position: relative;
   left: 18px;
 }

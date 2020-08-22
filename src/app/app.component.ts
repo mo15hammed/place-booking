@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, MenuController, Nav } from 'ionic-angular';
-import { Plugins, Capacitor } from '@capacitor/core';
 import { AuthService } from '../pages/auth/auth.service';
+import { Plugins, Capacitor } from '@capacitor/core';
+const { SplashScreen } = Plugins;
 
 @Component({
   templateUrl: 'app.html'
@@ -18,9 +19,12 @@ export class MyApp {
     platform.ready().then(() => {
       if (Capacitor.isPluginAvailable('SplashScreen')) {
         
-        Plugins.SplashScreen.hide();
         this.authService.autoLogin().subscribe(auth => {
           this.rootPage = auth ? 'PlacesPage' : 'AuthPage';
+          SplashScreen.hide();
+        }, error => {
+          console.log("AUTO LOGIN ERROR: ", error);
+          SplashScreen.hide();
         })
 
       }
