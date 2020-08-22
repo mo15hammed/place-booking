@@ -34,7 +34,9 @@ export class AddOfferPage {
     private placesService: PlacesService,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController) {
-      firebase.initializeApp(FIREBASE_CONFIG);
+      if (firebase.apps.length <= 0) {
+        firebase.initializeApp(FIREBASE_CONFIG);
+      }
   }
 
   ngOnInit() {

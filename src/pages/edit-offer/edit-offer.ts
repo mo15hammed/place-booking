@@ -42,7 +42,10 @@ export class EditOfferPage {
     this.offer = navParams.get('offer');
     this.placeLocation = this.offer.location;
     this.offerImageUrl = this.offer.imageUrl;
-    firebase.initializeApp(FIREBASE_CONFIG);
+    
+    if (firebase.apps.length <= 0) {
+      firebase.initializeApp(FIREBASE_CONFIG);
+    }
   }
 
   ngOnInit() {
