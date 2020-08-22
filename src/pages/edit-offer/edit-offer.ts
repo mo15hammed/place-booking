@@ -4,6 +4,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Place } from '../places/place.model';
 import { PlaceLocation } from '../places/location.model';
 import { PlacesService } from '../places/places.service';
+import { CameraPhoto } from '@capacitor/core';
+
+import firebase from 'firebase/app';
+import 'firebase/storage';
+import { FIREBASE_CONFIG } from '../../app/firebase.config';
 
 /**
  * Generated class for the EditOfferPage page.
@@ -24,6 +29,9 @@ export class EditOfferPage {
   private offer: Place;
   private placeLocation: PlaceLocation;
 
+  private offerImageUrl: string;
+  private isImageLoading = false;
+
   constructor(
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
@@ -33,6 +41,8 @@ export class EditOfferPage {
     ) {
     this.offer = navParams.get('offer');
     this.placeLocation = this.offer.location;
+    this.offerImageUrl = this.offer.imageUrl;
+    firebase.initializeApp(FIREBASE_CONFIG);
   }
 
   ngOnInit() {
@@ -57,6 +67,9 @@ export class EditOfferPage {
         updateOn: 'blur',
         validators: [Validators.required]
       }),
+      image: new FormControl(this.offer.imageUrl, {
+        validators: [Validators.required]
+      }),
       location: new FormControl(this.placeLocation, {
         validators: [Validators.required]
       })
@@ -73,6 +86,28 @@ export class EditOfferPage {
   onLocationPicked(event) {
     console.log(event);
     this.form.patchValue({location: event})
+  }
+
+
+  /**
+   * uploads the image to firebase storage and gets the download url of that image
+   * @param image the image picked by the user
+   */
+  onImagePicked(image: CameraPhoto) {
+    this.isImageLoading = true;
+    let imgFileName = new Date().getTime().toString();
+
+    const imgRef = firebase.storage().ref(`images/${imgFileName}`);
+    imgRef.putString(image.dataUrl, 'data_url').then(() => {
+      return imgRef.getDownloadURL();
+    }).then(downloadableImgUrl => {
+      this.offerImageUrl = downloadableImgUrl;
+      this.isImageLoading = false;
+      this.form.patchValue({image: downloadableImgUrl});
+    }).catch(err => {
+      console.log("IMAGE ERROR: ", err);
+    });
+
   }
 
   onEditOffer() {
@@ -97,6 +132,7 @@ export class EditOfferPage {
       this.form.value.price,
       new Date(this.form.value.dateFrom),
       new Date(this.form.value.dateTo),
+      this.form.value.image,
       this.form.value.location,
     ).subscribe(() => {
       

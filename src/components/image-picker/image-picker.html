@@ -1,0 +1,13 @@
+<div class="picker">
+  
+  <button ion-button (click)="onPickImage()" block margin-bottom icon-start>
+    <ion-icon name="image"></ion-icon>
+    Select Image
+  </button>
+  <p>{{imgWebPath}}</p>
+  <div class="image-container" *ngIf="isImageLoading || imageUrl">
+    <ion-spinner *ngIf="isImageLoading" ></ion-spinner>
+    <img *ngIf="!isImageLoading && imageUrl" [src]="imageUrl" class="selected-image"/>
+  </div>
+
+</div>

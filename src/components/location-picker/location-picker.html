@@ -6,6 +6,7 @@
   </button>
   <div class="map-image-container">
     <ion-spinner *ngIf="isLoading" ></ion-spinner>
+    <p *ngIf="!placeLocation && !isLoading" >Location should be displayed here.</p>
     <img *ngIf="placeLocation && !isLoading" [src]="placeLocation.staticMapImageUrl" class="map-image"/>
   </div>
 

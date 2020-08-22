@@ -30,11 +30,11 @@
     </ion-refresher-content>
   </ion-refresher>
 
-  <p *ngIf="!isLoading && (!loadedPlaces || loadedPlaces.length <=0)" margin-top>
+  <p *ngIf="!isLoading && (!relevantPlaces || relevantPlaces.length <=0)" margin-top>
     There are no places to be displayed. Come again later.
   </p>
 
-  <ion-grid *ngIf="!isLoading && loadedPlaces && loadedPlaces.length > 0">
+  <ion-grid *ngIf="!isLoading && relevantPlaces && relevantPlaces.length > 0">
     <ion-row >
       <ion-col col-12 col-sm-6 offset-sm-3>
         <ion-card>

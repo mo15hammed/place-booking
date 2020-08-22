@@ -40,7 +40,7 @@
         <ion-spinner *ngIf="isLoading" class="ion-margin-top"></ion-spinner>
         
 
-        <p *ngIf="!isLoading && loadedOffers && loadedOffers.length <= 0">There are no offers made to be displayed.</p>
+        <p *ngIf="!isLoading && (!loadedOffers || loadedOffers.length <= 0)">There are no offers made to be displayed.</p>
 
         <ion-list *ngIf="!isLoading && loadedOffers && loadedOffers.length > 0">
           <ion-item-sliding *ngFor="let offer of loadedOffers" #ionItemSliding>

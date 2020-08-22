@@ -6,7 +6,6 @@ import { tap, map, take, switchMap } from "rxjs/operators";
 import { PlaceLocation } from "./location.model";
 import { AuthService } from "../auth/auth.service";
 
-
 interface PlaceInterface {
     availableFrom: Date;
     availableTo: Date;
@@ -22,7 +21,8 @@ interface PlaceInterface {
 @Injectable()
 export class PlacesService {
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService) {
+  }
 
   private _places = new BehaviorSubject<Place[]>([]);
 
@@ -85,47 +85,6 @@ export class PlacesService {
     )
   }
   
-  // /**
-  //  * fetches all places offered by the current user from firebase database
-  //  * @returns an Observable
-  //  */
-  // fetchOffers() {
-
-  //   return this.authService.userId.pipe(
-  //     take(1),
-  //     switchMap(userId => {
-  //       console.log(userId);
-  //       return this.http
-  //       .get<{[key: string]: PlaceInterface}>(`https://placebooking-5d7b2.firebaseio.com/offered-places.json?orderBy="userId"&equalTo="${userId}"`)
-  //     }),
-  //     map(resData => {
-  //       const places = [];
-  //       for (const key in resData) {
-  //         if (resData.hasOwnProperty(key)) {
-  //           places.push(new Place(
-  //             key,
-  //             resData[key].title,
-  //             resData[key].description,
-  //             resData[key].imageUrl,
-  //             resData[key].price,
-  //             new Date(resData[key].availableFrom),
-  //             new Date(resData[key].availableTo),
-  //             resData[key].location,
-  //             resData[key].userId,
-  //           ));
-  //         }
-  //       }
-
-  //       return places;
-  //     }),
-  //     tap(places => {
-  //       console.log("data fetched again");
-  //       this._places.next(places)
-  //     })
-  //   );
-  // }
-
-
   /**
    * adds a new place to firebase database
    * @param title title of the new place
@@ -136,17 +95,17 @@ export class PlacesService {
    * @param location an object that contains {latitude, longitude, address, staticMapImageUrl}
    * @returns an Observable
    */
-  addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date, location: PlaceLocation) {
+  addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date, image: string, location: PlaceLocation) {
 
     let newPlace: Place;
-
     return this.authService.userId.pipe(
       take(1),
       switchMap(userId => {
         newPlace = new Place(
           new Date().toISOString(),
-          title,description,
-          "https://i.pinimg.com/originals/65/8f/77/658f77b9b527f89922ba996560a3e2b0.jpg",
+          title,
+          description,
+          image,
           price,
           dateFrom,
           dateTo,
@@ -162,9 +121,7 @@ export class PlacesService {
       }),
       take(1),
       tap(places => {
-        
         this._places.next(places.concat(newPlace));
-        
       })
     );
 
@@ -181,7 +138,7 @@ export class PlacesService {
    * @param location the editted object that contains {latitude, longitude, address, staticMapImageUrl}
    * @returns an Observable
    */
-  editPlace(placeId: string, title: string, description: string, price: number, dateFrom: Date, dateTo: Date, location: PlaceLocation) {
+  editPlace(placeId: string, title: string, description: string, price: number, dateFrom: Date, dateTo: Date, image: string, location: PlaceLocation) {
 
     let updatedPlaces: Place[];
 
@@ -199,7 +156,7 @@ export class PlacesService {
           placeId,
           title,
           description,
-          oldPlace.imageUrl,
+          image,
           price,
           dateFrom,
           dateTo,

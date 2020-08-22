@@ -4,11 +4,13 @@ import { MapModalComponent } from './map-modal/map-modal';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from 'ionic-angular';
 import { CreateBookingComponent } from './create-booking/create-booking';
+import { ImagePickerComponent } from './image-picker/image-picker';
 @NgModule({
 	declarations: [LocationPickerComponent, MapModalComponent,
-    CreateBookingComponent],
-	imports: [CommonModule, IonicModule],
-	exports: [LocationPickerComponent],
+    CreateBookingComponent,
+    ImagePickerComponent],
+	imports: [IonicModule],
+	exports: [LocationPickerComponent, ImagePickerComponent],
 	entryComponents: [MapModalComponent, CreateBookingComponent]
 })
 export class ComponentsModule {}

@@ -41,7 +41,6 @@ export class DiscoverPage implements OnInit{
   ngOnInit() {
     this.selectedPlaces = 'all';
     this.placesService.places.subscribe(places => {
-    console.log('refresh', places);
 
       this.loadedPlaces = places;
       this.relevantPlaces = this.loadedPlaces;
@@ -74,7 +73,8 @@ export class DiscoverPage implements OnInit{
     this.placesService.fetchPlaces().subscribe(() => {
       refresher.complete();
     }, error => {
-      console.log("ERROR: ", error);      
+      console.log("ERROR: ", error);
+      refresher.complete();   
     });
   }
 

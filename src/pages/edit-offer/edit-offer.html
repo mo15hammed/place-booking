@@ -74,6 +74,13 @@
           <location-picker (locationPick)="onLocationPicked($event)" [placeLocation]='placeLocation'></location-picker>
         </ion-col>
       </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <image-picker (imagePick)="onImagePicked($event)" [isImageLoading]="isImageLoading" [imageUrl]="offerImageUrl"></image-picker>
+        </ion-col>
+      </ion-row>
+
     </ion-grid>
   </form>
 </ion-content>
