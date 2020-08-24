@@ -4,7 +4,7 @@ In Ionic/Angular application where users can:-
 
   1- Login / Regitser.
 
-  2- Offer Different Places.
+  2- Offer different Places.
   
   3- Edit offered places.
   
