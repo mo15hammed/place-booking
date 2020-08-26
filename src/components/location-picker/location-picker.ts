@@ -1,11 +1,9 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { ModalController, ActionSheetController, AlertController } from 'ionic-angular';
-import { MapModalComponent } from '../map-modal/map-modal';
+import { AlertController } from 'ionic-angular';
 import { PlaceLocation } from '../../pages/places/location.model';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core'
-import { collectExternalReferences } from '@angular/compiler';
 /**
  * Generated class for the LocationPickerComponent component.
  *
@@ -25,8 +23,6 @@ export class LocationPickerComponent implements OnInit{
   private address = "";
 
   constructor(
-    private actSheetCtrl: ActionSheetController,
-    private mapModalCtrl: ModalController,
     private alertCtrl: AlertController,
     private http: HttpClient
     ) {    
@@ -37,36 +33,6 @@ export class LocationPickerComponent implements OnInit{
     if (this.placeLocation) {
       this.address = this.placeLocation.address;
     }
-  }
-
-  onPickLocation() {
-
-    this.actSheetCtrl.create({
-      title: 'How to pick location ?',
-      buttons: [
-        {
-          text: 'Pick manually',
-          handler: () => {
-            // this.presentMapModal();
-            this.getLocationFromAddress(this.address).subscribe(loc => {
-              console.log(loc);
-              
-            });
-          }
-        },
-        {
-          text: 'Current location',
-          handler: () => {
-            this.pickCurrentPosition();
-          }
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel'
-        }
-      ]
-    }).present();
-
   }
 
   onFindLocation() {
@@ -80,17 +46,6 @@ export class LocationPickerComponent implements OnInit{
     this.pickCurrentPosition();
   }
 
-  presentMapModal() {
-    console.log('Pick Location !!');
-    let mapModalEl = this.mapModalCtrl.create(MapModalComponent, {'place-location': this.placeLocation});
-    mapModalEl.present();
-  
-    mapModalEl.onDidDismiss(location => {
-      if (this.placeLocation != location) {
-        this.definePlaceLocation(location);
-      }
-    });
-  }
 
   pickCurrentPosition() {
     console.log('Getting current position...');

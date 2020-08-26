@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams, ActionSheetController, ModalContro
 import { Place } from '../../place.model';
 import { AuthService } from '../../../auth/auth.service';
 import { CreateBookingComponent } from '../../../../components/create-booking/create-booking';
-import { MapModalComponent } from '../../../../components/map-modal/map-modal';
 import { take } from 'rxjs/operators';
 
 /**
@@ -28,7 +27,6 @@ export class PlaceDetailsPage implements OnInit {
     private alertCtrl: AlertController,
     private actSheetCtrl: ActionSheetController,
     private bookingModalCtrl: ModalController,
-    private mapModalCtrl: ModalController,
     public navCtrl: NavController,
     public navParams: NavParams,
     private authService: AuthService

@@ -1,6 +1,5 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, Tabs, MenuController } from 'ionic-angular';
-import { AuthService } from '../auth/auth.service';
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 
 /**
  * Generated class for the PlacesPage page.

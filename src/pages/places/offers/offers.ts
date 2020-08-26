@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ItemSliding, MenuController, Refre
 import { Place } from '../place.model';
 import { PlacesService } from '../places.service';
 import { AuthService } from '../../auth/auth.service';
-import { switchMap, take, tap, map } from 'rxjs/operators';
+import { switchMap, take, map } from 'rxjs/operators';
 
 
 /**

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Place } from '../../place.model';
-import { MapModalComponent } from '../../../../components/map-modal/map-modal';
 import { PlacesService } from '../../places.service';
 
 
@@ -23,7 +22,6 @@ export class OfferDetailsPage {
   private loadedOffer: Place;
 
   constructor(
-    private mapModalCtrl: ModalController,
     public navCtrl: NavController,
     public navParams: NavParams,
     private placesService: PlacesService

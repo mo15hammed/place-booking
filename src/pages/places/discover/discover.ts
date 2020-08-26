@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, Segment, Refresher, MenuController
 import { Place } from '../place.model';
 import { PlacesService } from '../places.service';
 import { AuthService } from '../../auth/auth.service';
-import { take, tap, switchMap } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 
 /**
