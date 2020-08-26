@@ -5,6 +5,7 @@ import { PlaceLocation } from '../../pages/places/location.model';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core'
+import { collectExternalReferences } from '@angular/compiler';
 /**
  * Generated class for the LocationPickerComponent component.
  *
@@ -21,6 +22,8 @@ export class LocationPickerComponent implements OnInit{
   @Input() placeLocation = {} as PlaceLocation;
   @Output() locationPick = new EventEmitter<PlaceLocation>();
 
+  private address = "";
+
   constructor(
     private actSheetCtrl: ActionSheetController,
     private mapModalCtrl: ModalController,
@@ -31,17 +34,24 @@ export class LocationPickerComponent implements OnInit{
 
   ngOnInit() {
     console.log('init');
-    
+    if (this.placeLocation) {
+      this.address = this.placeLocation.address;
+    }
   }
 
   onPickLocation() {
+
     this.actSheetCtrl.create({
       title: 'How to pick location ?',
       buttons: [
         {
           text: 'Pick manually',
           handler: () => {
-            this.presentMapModal();
+            // this.presentMapModal();
+            this.getLocationFromAddress(this.address).subscribe(loc => {
+              console.log(loc);
+              
+            });
           }
         },
         {
@@ -57,7 +67,17 @@ export class LocationPickerComponent implements OnInit{
       ]
     }).present();
 
+  }
 
+  onFindLocation() {
+    this.getLocationFromAddress(this.address).subscribe(loc => {
+      console.log(loc);
+      
+    });
+  }
+
+  onFindCurrentPosition() {
+    this.pickCurrentPosition();
   }
 
   presentMapModal() {
@@ -86,8 +106,13 @@ export class LocationPickerComponent implements OnInit{
 
   definePlaceLocation(location: PlaceLocation) {
     this.isLoading = true;
-    this.getLocationAddress(location.lat, location.lng).subscribe( address => {
-      location.address = address;
+    this.getAddressFromLocation(location.lat, location.lng).subscribe( address => {
+      
+      if (!location.address || location.address == "") {
+        location.address = address;
+        console.log("LOCATION ADDRESS ==== ", location.address);
+      }
+      this.address = this.placeLocation.address;
       location.staticMapImageUrl = this.getStaticImageUrl(location.lat, location.lng);
       this.placeLocation = location
       this.locationPick.emit(this.placeLocation)
@@ -102,22 +127,46 @@ export class LocationPickerComponent implements OnInit{
 
   }
 
-  getLocationAddress(lat: number, lng: number) {
+  getLocationFromAddress(adrs: string) {
+   
+      return this.http.get<any>(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${adrs}&key=AIzaSyCIA_cAN25qbr3CuIxGdj_uhSGZrCccYUg`
+      ).pipe(
+        map(res => {      
+          console.log("RESSSS::::", res);
+              
+          if(!res || !res.results || res.results.length <= 0) {
+            return;
+          }
+          const lat = res.results[0].geometry.location.lat;
+          const lng = res.results[0].geometry.location.lng;
+
+          this.placeLocation = {lat: lat, lng: lng, staticMapImageUrl: "", address: adrs};
+          this.definePlaceLocation(this.placeLocation);
+
+          return res.results[0].geometry.location;
+        })
+      )
+    
+  }
+  
+
+  getAddressFromLocation(lat: number, lng: number) {
     return this.http.get<any>(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyBf6qT_VJPiLHb9eY7RBdIZ7qPuwEJuzCA`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCIA_cAN25qbr3CuIxGdj_uhSGZrCccYUg`
     ).pipe(
       map(res => {
         if(!res || !res.results || res.results.length <= 0) {
           return;
         }
-        return res.results[1].formatted_address;
+        return res.results[0].formatted_address;
       })
     )
   }
 
   getStaticImageUrl(lat: number, lng: number) {
     return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=10&size=500x300&maptype=roadmap
-            &markers=color:red%7C${lat},${lng}&key=AIzaSyBf6qT_VJPiLHb9eY7RBdIZ7qPuwEJuzCA`;
+            &markers=color:red%7C${lat},${lng}&key=AIzaSyCIA_cAN25qbr3CuIxGdj_uhSGZrCccYUg`;
   }
 
 }

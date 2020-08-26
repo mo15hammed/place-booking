@@ -53,10 +53,6 @@ export class PlaceDetailsPage implements OnInit {
     
   }
 
-  previewMap() {
-    this.mapModalCtrl.create(MapModalComponent, {'place-location': this.loadedPlace.location, 'readonly': true}).present();
-  }
-
   onBookPlace() {
     console.log('Book PLace');
     if (!this.isBookable) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, Segment, Refresher } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Segment, Refresher, MenuController } from 'ionic-angular';
 import { Place } from '../place.model';
 import { PlacesService } from '../places.service';
 import { AuthService } from '../../auth/auth.service';
@@ -27,7 +27,13 @@ export class DiscoverPage implements OnInit{
   private relevantPlaces: Place[];
   private loadedListPlaces: Place[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private placesService: PlacesService, private authService: AuthService) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private placesService: PlacesService,
+    private authService: AuthService,
+    private menuCtrl: MenuController,
+    ) {
     
   }
 
@@ -52,6 +58,10 @@ export class DiscoverPage implements OnInit{
       this.loadedListPlaces = this.relevantPlaces.slice(1);
     });
 
+  }
+
+  ionViewWillEnter() {
+    this.menuCtrl.enable(true);
   }
 
   ionViewDidLoad() {

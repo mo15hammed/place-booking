@@ -46,8 +46,4 @@ export class OfferDetailsPage {
   onEdit(offer: Place) {
     this.navCtrl.push('EditOfferPage', {'offer': offer});
   }
-
-  previewMap() {
-    this.mapModalCtrl.create(MapModalComponent, {'place-location': this.loadedOffer.location, 'readonly': true}).present();
-  }
 }

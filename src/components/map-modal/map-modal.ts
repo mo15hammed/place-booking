@@ -3,6 +3,7 @@ import { NavParams, ViewController } from 'ionic-angular';
 import { GESTURE_PRIORITY_TOGGLE } from 'ionic-angular/umd/gestures/gesture-controller';
 import { EventListener } from '@angular/core/src/debug/debug_node';
 import { PlaceLocation } from '../../pages/places/location.model';
+import { NON_TEXT_INPUT_REGEX } from 'ionic-angular/umd/util/dom';
 
 /**
  * Generated class for the MapModalComponent component.
@@ -11,7 +12,7 @@ import { PlaceLocation } from '../../pages/places/location.model';
  * Components.
  */
 
- declare var google;
+ declare var google: any;
 
 @Component({
   selector: 'map-modal',
@@ -62,45 +63,49 @@ export class MapModalComponent implements OnDestroy{
    * setting up the map and its marker
    */
   initMap() {
+    if (google) {
+      let mapOptions = {
+        center: this.center,
+        zoom: this.zoom,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        fullscreenControl: false,
+        mapTypeControl: false,
+        streetViewControl: false,
+        gestureHandling: "auto"
+      }
 
-    let mapOptions = {
-      center: this.center,
-      zoom: this.zoom,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
+      this.map = new google.maps.Map(this.mapEl.nativeElement, mapOptions);
+      
+      if (this.oldPlaceLocation) {
 
-    this.map = new google.maps.Map(this.mapEl.nativeElement, mapOptions);
-    
-    if (this.oldPlaceLocation) {
+        this.newPlaceLocation.lat = this.oldPlaceLocation.lat;
+        this.newPlaceLocation.lng = this.oldPlaceLocation.lng;
 
-      this.newPlaceLocation.lat = this.oldPlaceLocation.lat;
-      this.newPlaceLocation.lng = this.oldPlaceLocation.lng;
-
-      this.marker = new google.maps.Marker({
-        map: this.map,
-        position: this.center
-      })
-    }
-
-    if (!this.readonly) {
-      this.mapClickListenr = this.map.addListener('click', event => {      
-        if (this.marker) {
-          this.marker.setMap(null);
-        }
-        
         this.marker = new google.maps.Marker({
           map: this.map,
-          position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
-        });
-        
-        this.newPlaceLocation.lat = this.marker.position.lat();
-        this.newPlaceLocation.lng = this.marker.position.lng();
+          position: this.center
+        })
+      }
 
-        
-      });
+      if (!this.readonly) {
+        this.mapClickListenr = this.map.addListener('click', event => {      
+          if (this.marker) {
+            this.marker.setMap(null);
+          }
+          
+          this.marker = new google.maps.Marker({
+            map: this.map,
+            position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
+          });
+          
+          this.newPlaceLocation.lat = this.marker.position.lat();
+          this.newPlaceLocation.lng = this.marker.position.lng();
+
+          
+        });
+      }
     }
   }
-
 
   ngOnDestroy() {
     console.log('OnDestroy');

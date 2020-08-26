@@ -29,12 +29,10 @@ export class ImagePickerComponent {
     }
 
     Camera.getPhoto({
-      quality: 90,
+      quality: 20,
       source: CameraSource.Prompt,
       saveToGallery: true,
       correctOrientation: true,
-      height: 320,
-      width: 200,
       resultType: CameraResultType.DataUrl
     }).then(image => {
       this.imagePick.emit(image);

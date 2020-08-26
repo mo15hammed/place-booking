@@ -1,13 +1,33 @@
 <div class="picker">
   
-  <button ion-button (click)="onPickLocation()" block margin-bottom icon-start>
+  <!-- <button ion-button (click)="onPickLocation()" block margin-bottom icon-start>
     <ion-icon name="map"></ion-icon>
     Select Location
-  </button>
+  </button> -->
   <div class="map-image-container">
     <ion-spinner *ngIf="isLoading" ></ion-spinner>
     <p *ngIf="!placeLocation && !isLoading" >Location should be displayed here.</p>
     <img *ngIf="placeLocation && !isLoading" [src]="placeLocation.staticMapImageUrl" class="map-image"/>
   </div>
 
+  <ion-item>
+    <ion-label floating>
+      Address
+    </ion-label>
+    <ion-input type="address" name="address" [(ngModel)] = "address"></ion-input>
+  </ion-item>
+  <div *ngIf="address==''" class="error-msg">
+    <ion-icon name="alert"></ion-icon>
+    You need to enter an address.
+  </div>
+  
+
+  <button ion-button (click)="onFindLocation()" block icon-start>
+    <ion-icon name="map"></ion-icon>
+    Find Location
+  </button>
+  <button ion-button (click)="onFindCurrentPosition()" clear small block margin-bottom icon-start>
+    Or you can find your current location
+  </button>
+  
 </div>
